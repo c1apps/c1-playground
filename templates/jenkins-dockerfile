@@ -1,5 +1,7 @@
 FROM jenkins/jenkins:2.375.1-jdk11
 
+EXPOSE 8080
+
 USER root
 
 RUN apt-get update && apt-get install -y lsb-release
