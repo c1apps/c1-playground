@@ -2,7 +2,7 @@
 
 set -e
 
-# curl -fsSL https://raw.githubusercontent.com/mawinkler/c1-playground/master/bin/playground | bash
+# curl -fsSL https://raw.githubusercontent.com/c1apps/c1-playground/c1apps/bin/playground | bash
 
 if [ -z "$1" ]; then
   CURRENT_PATH=$(pwd)
@@ -14,7 +14,7 @@ fi
 if [ -f $PGPATH/bin/playground-helpers.sh ]; then
     .  $PGPATH/bin/playground-helpers.sh
 else
-    curl -fsSL https://raw.githubusercontent.com/mawinkler/c1-playground/master/bin/playground-helpers.sh -o /tmp/playground-helpers.sh
+    curl -fsSL https://raw.githubusercontent.com/c1apps/c1-playground/c1apps/bin/playground-helpers.sh -o /tmp/playground-helpers.sh
     . /tmp/playground-helpers.sh
 fi
 
@@ -108,7 +108,7 @@ function menu_main() {
                 if [ -f $PGPATH/bin/bootstrap.sh ]; then
                     .  $PGPATH/bin/bootstrap.sh
                 else
-                    curl -fsSL https://raw.githubusercontent.com/mawinkler/c1-playground/master/bin/bootstrap.sh -o /tmp/bootstrap.sh
+                    curl -fsSL https://raw.githubusercontent.com/c1apps/c1-playground/c1apps/bin/bootstrap.sh -o /tmp/bootstrap.sh
                     . /tmp/bootstrap.sh ${CURRENT_PATH}
                 fi
                 result="Exit menu and logout from the shell.\n\nThen relogin or create a new shell before continuing."
