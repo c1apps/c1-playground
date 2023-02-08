@@ -38,3 +38,5 @@ spec:
        - name: jenkins-vol
          persistentVolumeClaim:
            claimName: jenkins-pvc
+      ports:
+       - containerPort: 8080
