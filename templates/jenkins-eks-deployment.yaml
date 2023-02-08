@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: c1-jenkins
+  name: c1-jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: c1-jenkins
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: c1-jenkins
+    spec:
+      containers:
+      - name: c1-jenkins
+        image: $AWS_ECR/c1-jenkins:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
