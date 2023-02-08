@@ -31,7 +31,7 @@ OS="$(uname)"
 PACKAGE_MANAGER="apt"
 
 # Repo
-REPO=https://raw.githubusercontent.com/mawinkler/c1-playground/master
+REPO=https://raw.githubusercontent.com/c1apps/c1-playground/c1apps
 
 function ensure_bashrc() {
   if [ ! -f "$HOME/.bashrc" ]; then
@@ -85,7 +85,7 @@ function ensure_bashrc() {
 function ensure_playground() {
   # # Getting Playground repo
   if [ ! -d "c1-playground" ]; then
-    git clone --branch simplicity https://github.com/mawinkler/c1-playground.git
+    git clone --branch c1apps https://github.com/c1apps/c1-playground.git
   else
     cd c1-playground
     git pull
