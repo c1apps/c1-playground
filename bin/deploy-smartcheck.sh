@@ -78,10 +78,17 @@ function whitelist_namsspaces() {
 function create_smartcheck_overrides() {
   # create smart check overrides
   printf '%s' "Create smart check overrides"
-  SC_USERNAME=${SC_USERNAME} \
-    SC_TEMPPW=${SC_TEMPPW} \
-    SERVICE_TYPE=${SERVICE_TYPE} \
-    envsubst <$PGPATH/templates/smartcheck-overrides.yaml >$PGPATH/overrides/smartcheck-overrides.yaml
+  if is_eks ; then
+    SC_USERNAME=${SC_USERNAME} \
+     SC_TEMPPW=${SC_TEMPPW} \
+     SERVICE_TYPE='LoadBalancer' \
+     envsubst <$PGPATH/templates/smartcheck-overrides-eks.yaml >$PGPATH/overrides/smartcheck-overrides.yaml
+  else
+    SC_USERNAME=${SC_USERNAME} \
+     SC_TEMPPW=${SC_TEMPPW} \
+     SERVICE_TYPE=${SERVICE_TYPE} \
+     envsubst <$PGPATH/templates/smartcheck-overrides.yaml >$PGPATH/overrides/smartcheck-overrides.yaml
+  fi
 
   SC_REG_USERNAME=${SC_REG_USERNAME} \
     SC_REG_PASSWORD=${SC_REG_PASSWORD} \
