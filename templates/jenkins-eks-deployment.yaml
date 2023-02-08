@@ -4,6 +4,7 @@ metadata:
   labels:
     app: c1-jenkins
   name: c1-jenkins
+  namespace: jenkins
 spec:
   replicas: 1
   selector:
@@ -25,3 +26,10 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: jenkins-pvc
+          mountPath: "/"
+      volumes:
+      - name: jenkins-pvc
+        persistentVolumeClaim:
+          claimName: jenkins-pvc
