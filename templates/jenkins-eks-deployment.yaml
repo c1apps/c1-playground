@@ -26,9 +26,9 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
-        volumeMounts:
-        - name: jenkins-pvc
-          mountPath: "/"
+#        volumeMounts:
+#        - name: jenkins-pvc
+#          mountPath: "/"
       volumes:
       - name: jenkins-pvc
         persistentVolumeClaim:
