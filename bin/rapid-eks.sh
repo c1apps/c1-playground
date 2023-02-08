@@ -73,6 +73,7 @@ eksctl delete cluster --name \${CLUSTER_NAME}
 # Delete Keys
 aws ec2 delete-key-pair --key-name \${KEY_NAME}
 aws kms delete-alias --alias-name \${KEY_ALIAS_NAME}
+sed -i '/export MASTER_ARN=/d' ~/.bashrc
 sudo rm -Rf $PGPATH/auth $PGPATH/certs $PGPATH/audit/audit-webhook.yaml /tmp/passthrough.conf $PGPATH/log/* $PGPATH/services $PGPATH/opa
 EOF
   chmod +x $PGPATH/bin/rapid-eks-down.sh
