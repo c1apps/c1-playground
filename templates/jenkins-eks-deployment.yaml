@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: c1-jenkins
-        image: $AWS_ECR/c1-jenkins:latest
+        image: 527112378451.dkr.ecr.eu-west-1.amazonaws.com/c1-jenkins:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
