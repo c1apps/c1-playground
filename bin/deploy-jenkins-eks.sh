@@ -38,7 +38,7 @@ function create_ecr_repository() {
 function create_jenkins_image() {
   printf '%s\n' "Create jenkins image"
 
-  docker build -t $AWS_ECR/c1-jenkins:latest - < ${PGPATH}/templates/jenkins-eks-dockerfile
+  docker build -t $AWS_ECR/c1-jenkins:latest - < ${PGPATH}/templates/jenkins-dockerfile
 
   printf '%s\n' "Jenkins image created 🍻"
 
