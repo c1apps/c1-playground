@@ -60,7 +60,6 @@ function main() {
   deploy_jenkins
 }
 
-
 # run main of no arguments given
 if [[ $# -eq 0 ]] ; then
   main
