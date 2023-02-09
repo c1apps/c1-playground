@@ -22,3 +22,9 @@ function delete_ecr_repository() {
     echo "c1-jenkins repository already deleted"
   fi
 }
+
+kubectl delete service c1-jenkins -n jenkins
+kubectl delete deploy c1-jenkins -n jenkins
+kubectl delete pvc jenkins-pvc -n jenkins
+delete_namespace
+delete_ecr_repository
