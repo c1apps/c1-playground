@@ -66,17 +66,6 @@ function get_initial_admin_password() {
   printf '\n'
 }
 
-ensure_network
-create_dind_container_image
-ensure_dind_container
-create_jenkins_image
-ensure_jenkins_container
-get_initial_admin_password
-
-echo "Jenkins: http://$(hostname -I | awk '{print $1}'):${JENKINS_SERVICE_PORT}" | tee -a ${PGPATH}/services
-echo "  U/P: admin / ${ADMIN_PASSWORD}" | tee -a ${PGPATH}/services
-echo | tee -a ${PGPATH}/services
-
 function main() {
   create_namespace
   whitelist_namespaces
