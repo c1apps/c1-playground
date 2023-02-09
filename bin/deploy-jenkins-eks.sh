@@ -57,7 +57,7 @@ function get_initial_admin_password() {
   printf '%s' "Waiting for admin password"
   for i in {1..60} ; do
     sleep 2
-    ADMIN_PASSWORD=$(kubectl exec -n jenkins ${JENKINS_CONTAINER_NAME} cat /var/jenkins_home/secrets/initialAdminPassword
+    ADMIN_PASSWORD=$(kubectl exec -n jenkins ${JENKINS_CONTAINER_NAME} cat /var/jenkins_home/secrets/initialAdminPassword)
     if [ "${ADMIN_PASSWORD}" != "" ] ; then
       break
     fi
@@ -76,7 +76,7 @@ function main() {
 
   #Access data
   export JENKINS_URL=$(kubectl -n jenkins get svc c1-jenkins -o json | jq -r .status.loadBalancer.ingress[].hostname)
-  echo "Jenkins: http://${JENKINS_URL} | tee -a ${PGPATH}/services
+  echo "Jenkins: http://${JENKINS_URL}" | tee -a ${PGPATH}/services
   echo "  U/P: admin / ${ADMIN_PASSWORD}" | tee -a ${PGPATH}/services
   echo | tee -a ${PGPATH}/services
 }
