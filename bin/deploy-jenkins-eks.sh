@@ -57,7 +57,7 @@ function get_initial_admin_password() {
   printf '%s' "Waiting for admin password"
   for i in {1..60} ; do
     sleep 2
-    ADMIN_PASSWORD=$(kubectl exec ${JENKINS_CONTAINER_NAME} sh -c 'if [ -f /var/jenkins_home/secrets/initialAdminPassword ]; then cat /var/jenkins_home/secrets/initialAdminPassword; else echo ""; fi')
+    ADMIN_PASSWORD=$(kubectl exec -n jenkins ${JENKINS_CONTAINER_NAME} sh -c 'if [ -f /var/jenkins_home/secrets/initialAdminPassword ]; then cat /var/jenkins_home/secrets/initialAdminPassword; else echo ""; fi')
     if [ "${ADMIN_PASSWORD}" != "" ] ; then
       break
     fi
