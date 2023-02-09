@@ -5,6 +5,11 @@
 # Deploys Jenkins on EKS Cluster
 #######################################
 
+# Exports
+export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+export AWS_REGION=$(aws configure get region)
+export AWS_ECR=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
 function create_namespace() {
   # create namespace
   printf '%s' "Create jenkins namespace"
@@ -18,17 +23,12 @@ function whitelist_namespaces() {
 }
 
 function create_ecr_repository() {
-  # Exports
-  export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-  export AWS_REGION=$(aws configure get region)
-  export AWS_ECR=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-
   # Create ECR repository
   aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR
   if [[ $(aws ecr describe-repositories) =~ :repository/c1-jenkins ]]; then
     echo "c1-jenkins repository already exists"
   else
-  aws ecr create-repository \
+    aws ecr create-repository \
     --repository-name c1-jenkins \
     --image-scanning-configuration scanOnPush=true \
     --region $AWS_REGION
