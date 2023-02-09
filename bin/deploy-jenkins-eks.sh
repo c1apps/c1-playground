@@ -44,11 +44,12 @@ function create_jenkins_image() {
 }
 
 function deploy_jenkins() {
-  printf '%s\n' "Create jenkins image"
-  docker build -t $AWS_ECR/c1-jenkins:latest - < ${PGPATH}/templates/jenkins-dockerfile
-  printf '%s\n' "Jenkins image created 🍻"
-  docker push $AWS_ECR/c1-jenkins:latest
-  printf '%s\n' "Jenkins image pushed to ECR 🍻"
+  printf '%s\n' "Create Jenkins Volume"
+  kubectl apply -f $PGPATH/templates/jenkins-eks-volume-claim.yaml -o yaml
+  printf '%s\n' "Deploy Jenkins on EKS"
+  AWS_ECR=${AWS_ECR} \
+    envsubst <$PGPATH/templates/jenkins-eks-deployment.yaml | kubectl apply -f - -o yaml
+  printf '%s\n' "Jenkins deployed on EKS 🍻"
 }
 
 function main() {
