@@ -52,12 +52,43 @@ function deploy_jenkins() {
   printf '%s\n' "Jenkins deployed on EKS 🍻"
 }
 
+function get_initial_admin_password() {
+  export JENKINS_CONTAINER_NAME=$(kubectl get pods -n jenkins -o name)
+  printf '%s' "Waiting for admin password"
+  for i in {1..60} ; do
+    sleep 2
+    ADMIN_PASSWORD=$(kubectl exec ${JENKINS_CONTAINER_NAME} sh -c 'if [ -f /var/jenkins_home/secrets/initialAdminPassword ]; then cat /var/jenkins_home/secrets/initialAdminPassword; else echo ""; fi')
+    if [ "${ADMIN_PASSWORD}" != "" ] ; then
+      break
+    fi
+    printf '%s' "."
+  done
+  printf '\n'
+}
+
+ensure_network
+create_dind_container_image
+ensure_dind_container
+create_jenkins_image
+ensure_jenkins_container
+get_initial_admin_password
+
+echo "Jenkins: http://$(hostname -I | awk '{print $1}'):${JENKINS_SERVICE_PORT}" | tee -a ${PGPATH}/services
+echo "  U/P: admin / ${ADMIN_PASSWORD}" | tee -a ${PGPATH}/services
+echo | tee -a ${PGPATH}/services
+
 function main() {
   create_namespace
   whitelist_namespaces
   create_ecr_repository
   create_jenkins_image
   deploy_jenkins
+  get_initial_admin_password
+
+  #Access data
+  echo "Jenkins: http://$(hostname -I | awk '{print $1}'):${JENKINS_SERVICE_PORT}" | tee -a ${PGPATH}/services
+  echo "  U/P: admin / ${ADMIN_PASSWORD}" | tee -a ${PGPATH}/services
+  echo | tee -a ${PGPATH}/services
 }
 
 # run main of no arguments given
