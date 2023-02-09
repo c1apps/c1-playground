@@ -1,3 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-name: c1-jenkins
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+  name: c1-jenkins
+  namespace: jenkins
+  labels:
+    app: c1-jenkins
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    name: c1-jenkins
+    targetPort: 8080
+  selector:
+    app: c1-jenkins
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
