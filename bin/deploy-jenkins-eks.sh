@@ -37,13 +37,17 @@ function create_ecr_repository() {
 
 function create_jenkins_image() {
   printf '%s\n' "Create jenkins image"
-
   docker build -t $AWS_ECR/c1-jenkins:latest - < ${PGPATH}/templates/jenkins-dockerfile
-
   printf '%s\n' "Jenkins image created 🍻"
-
   docker push $AWS_ECR/c1-jenkins:latest
+  printf '%s\n' "Jenkins image pushed to ECR 🍻"
+}
 
+function deploy_jenkins() {
+  printf '%s\n' "Create jenkins image"
+  docker build -t $AWS_ECR/c1-jenkins:latest - < ${PGPATH}/templates/jenkins-dockerfile
+  printf '%s\n' "Jenkins image created 🍻"
+  docker push $AWS_ECR/c1-jenkins:latest
   printf '%s\n' "Jenkins image pushed to ECR 🍻"
 }
 
@@ -52,6 +56,7 @@ function main() {
   whitelist_namespaces
   create_ecr_repository
   create_jenkins_image
+  deploy_jenkins
 }
 
 
