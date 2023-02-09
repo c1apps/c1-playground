@@ -75,7 +75,8 @@ function main() {
   get_initial_admin_password
 
   #Access data
-  echo "Jenkins: http://$(hostname -I | awk '{print $1}'):${JENKINS_SERVICE_PORT}" | tee -a ${PGPATH}/services
+  export JENKINS_URL=$(kubectl -n jenkins get svc c1-jenkins -o json | jq -r .status.loadBalancer.ingress[].hostname)
+  echo "Jenkins: http://${JENKINS_URL} | tee -a ${PGPATH}/services
   echo "  U/P: admin / ${ADMIN_PASSWORD}" | tee -a ${PGPATH}/services
   echo | tee -a ${PGPATH}/services
 }
