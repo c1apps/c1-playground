@@ -331,7 +331,8 @@ function menu_deploy() {
            "Prometheus" "Prometheus & Grafana" \
            "Starboard" "Starboard & Trivy" \
            "Harbor" "Harbor Registry" \
-           "Jenkins" "Jenkins CI/CD" \
+           "Jenkins Local" "Jenkins CI/CD local deploy" \
+           "Jenkins EKS" "Jenkins CI/CD EKS deploy" \
            "GitLab" "GitLab CI/CD")
     TITLE="Deploy"
     check_k8s
@@ -400,9 +401,13 @@ function menu_deploy() {
                 clear
                 $PGPATH/bin/deploy-harbor.sh
                 ;;
-            "Jenkins")
+            "Jenkins Local")
                 clear
                 $PGPATH/bin/deploy-jenkins.sh
+                ;;
+            "Jenkins EKS")
+                clear
+                $PGPATH/bin/deploy-jenkins-eks.sh
                 ;;
             "GitLab")
                 clear
