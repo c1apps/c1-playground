@@ -25,6 +25,35 @@ function delete_ecr_repository() {
   fi
 }
 
+function delete_jenkins_dns_record() {
+  export DOMAIN_NAME=c1demo.es
+  export HOSTED_ZONE_ID=$(aws route53 list-hosted-zones-by-name | jq '.HostedZones[] | select(.Name == "'$DOMAIN_NAME'.") | .Id' | grep -oP '(?<=")(.*?)(?=")')
+  export JENKINS_ELB_URL=$(kubectl -n jenkins get svc c1-jenkins -o json | jq -r .status.loadBalancer.ingress[].hostname)
+  
+  aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch file://<(cat << EOF
+  {
+  "Comment": "Create DNS record for Jenkins",
+  "Changes": [
+    {
+      "Action": "DELETE",
+      "ResourceRecordSet": {
+        "Name": "jenkins.$DOMAIN_NAME",
+        "Type": "CNAME",
+        "TTL": 60,
+        "ResourceRecords": [
+          {
+            "Value": "$JENKINS_ELB_URL"
+          }
+        ]
+      }
+    }
+  ]
+}
+EOF
+)
+}
+
+delete_jenkins_dns_record
 kubectl delete service c1-jenkins -n jenkins
 kubectl delete deploy c1-jenkins -n jenkins
 kubectl delete pvc jenkins-pvc -n jenkins

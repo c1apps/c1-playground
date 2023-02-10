@@ -66,32 +66,32 @@ function get_initial_admin_password() {
   printf '\n'
 }
 
-function create_public_dns_record() {
+function create_jenkins_dns_record() {
   export DOMAIN_NAME=c1demo.es
-  export HOSTED_ZONE_ID=$(aws route53 list-hosted-zones-by-name | jq '.HostedZones[] | select(.Name == "'$DOMAIN_NAME'.") | .Id')
+  export HOSTED_ZONE_ID=$(aws route53 list-hosted-zones-by-name | jq '.HostedZones[] | select(.Name == "'$DOMAIN_NAME'.") | .Id' | grep -oP '(?<=")(.*?)(?=")')
   export JENKINS_ELB_URL=$(kubectl -n jenkins get svc c1-jenkins -o json | jq -r .status.loadBalancer.ingress[].hostname)
-  export ELB_HOSTED_ZONE_ID=$(aws elb describe-load-balancers --load-balancer-name $JENKINS_ELB_UR --region $AWS_REGION | jq '.LoadBalancerDescriptions[] | .CanonicalHostedZoneNameID'
-  # Create change batch filee
-  cat <<EOF >$PGPATH/templates/jenkins_dns_record.json
-{
-  "Comment": "An alias resource record for Jenkins",
+  
+aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch file://<(cat << EOF
+  {
+  "Comment": "Create DNS record for Jenkins",
   "Changes": [
     {
       "Action": "UPSERT",
       "ResourceRecordSet": {
         "Name": "jenkins.$DOMAIN_NAME",
-        "Type": "A",
-        "AliasTarget": {
-          "HostedZoneId": $HOSTED_ZONE_ID,
-          "DNSName": $JENKINS_ELB_URL,
-          "EvaluateTargetHealth": true
-        }
+        "Type": "CNAME",
+        "TTL": 60,
+        "ResourceRecords": [
+          {
+            "Value": "$JENKINS_ELB_URL"
+          }
+        ]
       }
     }
   ]
 }
 EOF
-aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch $PGPATH/templates/jenkins_dns_record.json
+)
 }
 
 function main() {
@@ -101,7 +101,7 @@ function main() {
   create_jenkins_image
   deploy_jenkins
   get_initial_admin_password
-  create_public_dns_record
+  create_jenkins_dns_record
 
   #Access data
   export JENKINS_URL=$(kubectl -n jenkins get svc c1-jenkins -o json | jq -r .status.loadBalancer.ingress[].hostname)
