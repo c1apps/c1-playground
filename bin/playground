@@ -431,7 +431,8 @@ function menu_delete() {
            "Prometheus" "Prometheus & Grafana" \
            "Starboard" "Starboard & Trivy" \
            "Harbor" "Harbor Registry" \
-           "Jenkins" "Jenkins CI/CD" \
+           "Jenkins Local" "Jenkins CI/CD local deploy" \
+           "Jenkins EKS" "Jenkins CI/CD EKS deploy" \
            "GitLab" "GitLab CI/CD")
     TITLE="(Danger Zone) Delete"
     check_k8s
@@ -490,9 +491,13 @@ function menu_delete() {
                 clear
                 $PGPATH/bin/delete-harbor.sh
                 ;;
-            "Jenkins")
+            "Jenkins Local")
                 clear
                 $PGPATH/bin/delete-jenkins.sh
+                ;;
+            "Jenkins EKS")
+                clear
+                $PGPATH/bin/delete-jenkins-eks.sh
                 ;;
             "GitLab")
                 clear
